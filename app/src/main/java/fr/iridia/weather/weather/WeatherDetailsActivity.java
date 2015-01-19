@@ -1,5 +1,7 @@
 package fr.iridia.weather.weather;
 
+import android.content.Context;
+import android.location.LocationManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.widget.TextView;
@@ -25,10 +27,15 @@ public class WeatherDetailsActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weather_details);
 
+        LocationManager lm = (LocationManager)
+        getSystemService(Context.LOCATION_SERVICE);
+
         switch (getIntent().getStringExtra(DETAIL_ACTIVITY_KEY)) {
             case DETAIL_ACTIVITY_TYPES.HERE:
-                TextView tv = (TextView) findViewById(R.id.detailsTitle);
-                tv.setText(R.string.here);
+                TextView tvName = (TextView) findViewById(R.id.detailsTitle);
+                TextView tvGPS = (TextView) findViewById(R.id.detailsGPS);
+                tvName.setText(R.string.here);
+                tvGPS.setText("GPS coordinates");
                 break;
             case DETAIL_ACTIVITY_TYPES.NAMED_CITY:
                 break;
