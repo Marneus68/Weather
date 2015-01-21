@@ -20,8 +20,13 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
     }
 
-    public void openSettings(View v) {
+    public void onSearchPress(View v) {
 
+    }
+
+    public void openSettings(View v) {
+        Intent intent = new Intent(this, SettingsActivity.class);
+        startActivity(intent);
     }
 
     public void openHere(View v) {

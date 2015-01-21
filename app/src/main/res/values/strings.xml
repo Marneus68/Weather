@@ -9,5 +9,6 @@
 
     <string name="unset">...</string>
     <string name="here">Here</string>
+    <string name="settings">Settings</string>
 
 </resources>

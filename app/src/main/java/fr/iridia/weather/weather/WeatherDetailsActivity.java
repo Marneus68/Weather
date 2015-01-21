@@ -39,9 +39,6 @@ public class WeatherDetailsActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weather_details);
 
-        LocationManager lm = (LocationManager)
-        getSystemService(Context.LOCATION_SERVICE);
-
         tvName  = (TextView) findViewById(R.id.detailsTitle);
         tvGPS   = (TextView) findViewById(R.id.detailsGPS);
         tvTemp  = (TextView) findViewById(R.id.detailsTemperature);
