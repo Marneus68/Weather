@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:padding="5dp"
+        android:background="@color/primary_material_dark">
+
+        <ImageView
+            android:layout_height="match_parent"
+            android:layout_width="50dp"
+            android:id="@+id/iconBack"
+            android:src="@drawable/ic_action_chevron_left"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:onClick="onBackButtonPressed"/>
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:padding="7dp"
+            android:id="@+id/iconSearch"
+            android:src="@drawable/ic_action_search"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:onClick="search"/>
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/searchField"
+            android:layout_alignParentBottom="true"
+            android:layout_toLeftOf="@+id/iconSearch"
+            android:layout_toRightOf="@+id/iconBack"
+            android:layout_toEndOf="@+id/iconBack"
+            android:hint="@string/search"
+            android:inputType="textCapWords"
+            android:imeActionLabel="@string/search"/>
+
+    </RelativeLayout>
+
+</LinearLayout>

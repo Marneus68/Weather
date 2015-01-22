@@ -30,8 +30,7 @@
         android:textSize="140dp"
         android:text="10°"
         android:layout_below="@+id/detailsGPS"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="40dp" />
+        android:layout_centerHorizontal="true" />
 
     <LinearLayout
         android:orientation="vertical"

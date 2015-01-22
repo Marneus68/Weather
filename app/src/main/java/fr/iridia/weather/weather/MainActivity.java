@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.LocationManager;
-import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -20,8 +19,10 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
     }
 
-    public void onSearchPress(View v) {
-
+    public void openSearch(View v) {
+        Intent intent = new Intent(this, SearchActivity.class);
+        startActivity(intent);
+        overridePendingTransition (R.anim.left_entering_scroll, R.anim.right_leaving_scroll);
     }
 
     public void openSettings(View v) {

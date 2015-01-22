@@ -28,6 +28,11 @@
             android:name=".SettingsActivity"
             android:label="@string/settings" >
         </activity>
+        <activity
+            android:name=".SearchActivity"
+            android:label="@string/search"
+            android:windowSoftInputMode="stateVisible" >
+        </activity>
     </application>
 
 </manifest>
