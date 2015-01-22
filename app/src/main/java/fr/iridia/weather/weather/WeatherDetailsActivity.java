@@ -64,6 +64,8 @@ public class WeatherDetailsActivity extends ActionBarActivity {
 
                 break;
             case DETAIL_ACTIVITY_TYPES.NAMED_CITY:
+                tvName.setText(getIntent().getStringExtra(DETAIL_ACTIVITY_EXTRA_KEY));
+                tvGPS.setText("");
                 break;
             case DETAIL_ACTIVITY_TYPES.NAMED_GPS_COORDINATES:
                 break;
@@ -73,7 +75,7 @@ public class WeatherDetailsActivity extends ActionBarActivity {
     protected void hereDetails(Location location) {
         tvGPS.setText(location.getLatitude() + " : " + location.getLongitude());
 
-        String packagegane = getApplicationContext().getPackageName();
+        final String packagename = getApplicationContext().getPackageName();
         final WeatherDetailsActivity wda = this;
 
         new OpenWeatherMapGPSAsyncTask() {
@@ -81,7 +83,8 @@ public class WeatherDetailsActivity extends ActionBarActivity {
             protected void onPostExecute(LocationWeatherInfo result) {
                 if (result!=null) {
                     tvTemp.setText(String.valueOf((int) Math.round(result.todayWeatherInfo.temperature))+"°");
-                    ivWeather.setImageDrawable(getDrawable(wda.getResources().getIdentifier("w"+result.todayWeatherInfo.image, "drawable", wda.getPackageName())));
+                    // TODO: this seems to fail on API 19, find another way to do it
+                    ivWeather.setImageDrawable(getDrawable(wda.getResources().getIdentifier("w"+result.todayWeatherInfo.image, "drawable", packagename)));
                 }
             }
         }.execute(new QuerryGPSLocation(location.getLongitude(), location.getLatitude()));

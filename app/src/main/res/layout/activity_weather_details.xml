@@ -27,38 +27,52 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textSize="140dp"
+        android:textSize="125dp"
         android:text="10°"
         android:layout_below="@+id/detailsGPS"
         android:layout_centerHorizontal="true" />
 
-    <LinearLayout
+    <RelativeLayout
         android:orientation="vertical"
         android:background="@color/primary_material_dark"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/detailsTemperature">
+        android:layout_below="@+id/detailsTemperature"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:layout_margin="20dp"
+            android:id="@+id/detailsIcon"
+            android:src="@drawable/w09d"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_above="@+id/linearLayout" />
 
         <LinearLayout
             android:orientation="horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="90dp"
-            android:layout_marginRight="90dp"
-            android:layout_marginBottom="20dp"
-            android:layout_marginTop="20dp"
-            android:layout_gravity="center_horizontal">
+            android:layout_width="fill_parent"
+            android:layout_height="140dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:background="@android:color/black"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:id="@+id/linearLayout"
+            android:padding="10dp">
 
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="150dp"
-                android:id="@+id/detailsIcon"/>
-
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="@string/forecast"
+                android:id="@+id/textView" />
         </LinearLayout>
 
-    </LinearLayout>
+    </RelativeLayout>
 
 </RelativeLayout>
