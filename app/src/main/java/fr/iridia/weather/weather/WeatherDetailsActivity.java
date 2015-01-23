@@ -92,9 +92,7 @@ public class WeatherDetailsActivity extends ActionBarActivity {
 
     protected void hereDetails(Location location) {
         tvGPS.setText(location.getLatitude() + " : " + location.getLongitude());
-
         final WeatherDetailsActivity wda = this;
-
         new OpenWeatherMapGPSAsyncTask() {
             @Override
             protected void onPostExecute(LocationWeatherInfo result) {

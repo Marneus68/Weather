@@ -1,12 +1,13 @@
 package fr.iridia.weather.weather;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.location.Location;
+import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -26,10 +27,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Vector;
 
 import fr.iridia.weather.weather.data.QuerryLocation;
@@ -102,13 +100,29 @@ public class SearchActivity extends Activity {
 
             final List<QuerryLocation> querryLocationsList = new Vector<QuerryLocation>();
             final Context context = getBaseContext();
-
+            final Activity act = this;
 
             listView.addHeaderView(listHeader);
             listView.setAdapter(listAdapter);
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    ConnectivityManager conMgr = (ConnectivityManager) getSystemService (Context.CONNECTIVITY_SERVICE);
+                    if (conMgr.getActiveNetworkInfo() == null
+                            || !conMgr.getActiveNetworkInfo().isAvailable()
+                            || !conMgr.getActiveNetworkInfo().isConnected()) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(act);
+                        builder.setMessage(R.string.data_disabled)
+                                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                                    public void onClick(final DialogInterface dialog, final int id) {
+                                        dialog.cancel();
+                                    }
+                                });
+                        AlertDialog alert = builder.create();
+                        alert.show();
+                        return;
+                    }
+
                     Intent intent = new Intent(context, WeatherDetailsActivity.class);
                     intent.putExtra(WeatherDetailsActivity.DETAIL_ACTIVITY_KEY, WeatherDetailsActivity.DETAIL_ACTIVITY_TYPES.NAMED_GPS_COORDINATES);
                     intent.putExtra(WeatherDetailsActivity.DETAIL_ACTIVITY_EXTRA_KEY, querryLocationsList.get(position).name);

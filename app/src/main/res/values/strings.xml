@@ -4,8 +4,10 @@
     <string name="app_name">Weather</string>
     <string name="action_settings">Settings</string>
     <string name="gps_disabled">Your GPS needs to be enabled in order to find out your current location. Do you want to enable it now?</string>
+    <string name="data_disabled">You need to have an internet access in order to retrieve the weather informations.</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="ok">Ok</string>
     <string name="unset">...</string>
     <string name="here">Here</string>
     <string name="settings">Settings</string>

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -35,19 +36,40 @@ public class MainActivity extends ActionBarActivity {
         if ( !manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
             enableGPSPopup();
         } else {
-            Intent intent = new Intent(this, WeatherDetailsActivity.class);
-            intent.putExtra(WeatherDetailsActivity.DETAIL_ACTIVITY_KEY, WeatherDetailsActivity.DETAIL_ACTIVITY_TYPES.HERE);
-            startActivity(intent);
+            openWeatherDetailsActivity();
         }
     }
 
+    public void openWeatherDetailsActivity() {
+        ConnectivityManager conMgr = (ConnectivityManager) getSystemService (Context.CONNECTIVITY_SERVICE);
+        if (conMgr.getActiveNetworkInfo() == null
+                || !conMgr.getActiveNetworkInfo().isAvailable()
+                || !conMgr.getActiveNetworkInfo().isConnected()) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage(R.string.data_disabled)
+                    .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                        public void onClick(final DialogInterface dialog, final int id) {
+                            dialog.cancel();
+                        }
+                    });
+            AlertDialog alert = builder.create();
+            alert.show();
+            return;
+        }
+
+        Intent intent = new Intent(this, WeatherDetailsActivity.class);
+        intent.putExtra(WeatherDetailsActivity.DETAIL_ACTIVITY_KEY, WeatherDetailsActivity.DETAIL_ACTIVITY_TYPES.HERE);
+        startActivity(intent);
+    }
+
     protected void enableGPSPopup() {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(R.string.gps_disabled)
                 .setCancelable(false)
                 .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(final DialogInterface dialog, final int id) {
-                        startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                        //startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                        openWeatherDetailsActivity();
                     }
                 })
                 .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
@@ -55,7 +77,7 @@ public class MainActivity extends ActionBarActivity {
                         dialog.cancel();
                     }
                 });
-        final AlertDialog alert = builder.create();
+        AlertDialog alert = builder.create();
         alert.show();
     }
 }
