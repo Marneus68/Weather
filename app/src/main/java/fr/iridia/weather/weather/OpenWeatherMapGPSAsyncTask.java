@@ -15,14 +15,14 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import fr.iridia.weather.weather.data.LocationWeatherInfo;
-import fr.iridia.weather.weather.data.QuerryGPSLocation;
+import fr.iridia.weather.weather.data.QuerryLocation;
 import fr.iridia.weather.weather.data.WeatherInfo;
 
-public class OpenWeatherMapGPSAsyncTask extends AsyncTask<QuerryGPSLocation, Integer, LocationWeatherInfo> {
+public class OpenWeatherMapGPSAsyncTask extends AsyncTask<QuerryLocation, Integer, LocationWeatherInfo> {
 
     public static final String TAG = "OpenWeatherMapGPSAsyncTask";
 
-    protected LocationWeatherInfo doInBackground(QuerryGPSLocation... loc) {
+    protected LocationWeatherInfo doInBackground(QuerryLocation... loc) {
 
         String querry = "http://api.openweathermap.org/data/2.5/weather?lat=%LAT%&lon=%LON%";
         querry = querry.replace("%LAT%", Double.toString(loc[0].latitude)).replace("%LON%", Double.toString(loc[0].longitude));

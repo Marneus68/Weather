@@ -46,7 +46,6 @@
             android:layout_height="150dp"
             android:layout_margin="20dp"
             android:id="@+id/detailsIcon"
-            android:src="@drawable/w09d"
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
