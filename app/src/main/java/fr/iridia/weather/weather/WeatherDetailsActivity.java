@@ -6,6 +6,9 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -28,12 +31,21 @@ public class WeatherDetailsActivity extends ActionBarActivity {
         private  DETAIL_ACTIVITY_TYPES() {}
     }
 
-    TextView tvName;
-    TextView tvGPS;
-    TextView tvTemp;
-    ImageView ivWeather;
+    public static final class   FAV_STATUS {
+        public static final int NOT_APPLICABLE = 0;
+        public static final int FAVORITED = 1;
+        public static final int NOT_FAVORITED = 2;
+    }
 
-    String packagename = null;
+    protected int fav_status = FAV_STATUS.NOT_APPLICABLE;
+
+    protected TextView tvName;
+    protected TextView tvGPS;
+    protected TextView tvTemp;
+    protected ImageView ivWeather;
+    protected ImageView favIcon;
+
+    protected String packagename = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,9 +58,10 @@ public class WeatherDetailsActivity extends ActionBarActivity {
         tvGPS   = (TextView) findViewById(R.id.detailsGPS);
         tvTemp  = (TextView) findViewById(R.id.detailsTemperature);
         ivWeather = (ImageView) findViewById(R.id.detailsIcon);
+        favIcon = (ImageView) findViewById(R.id.favIcon);
 
         tvGPS.setText(R.string.unset);
-        tvTemp.setText(R.string.unset);
+        //tvTemp.setText(R.string.unset);
 
         switch (getIntent().getStringExtra(DETAIL_ACTIVITY_KEY)) {
             case DETAIL_ACTIVITY_TYPES.HERE:
@@ -85,9 +98,10 @@ public class WeatherDetailsActivity extends ActionBarActivity {
                         }
                     }
                 }.execute(new QuerryLocation(tmpLongitude, tmpLatitude));
-
+                fav_status = FAV_STATUS.NOT_FAVORITED;
                 break;
         }
+        updateFavButton();
     }
 
     protected void hereDetails(Location location) {
@@ -96,11 +110,55 @@ public class WeatherDetailsActivity extends ActionBarActivity {
         new OpenWeatherMapGPSAsyncTask() {
             @Override
             protected void onPostExecute(LocationWeatherInfo result) {
-                if (result!=null) {
-                    tvTemp.setText(String.valueOf((int) Math.round(result.todayWeatherInfo.temperature))+"°");
+                final LocationWeatherInfo fresult = result;
+                if (fresult!=null) {
+                    wda.appearWeatherInfo(result);
                     ivWeather.setImageDrawable(getResources().getDrawable(wda.getResources().getIdentifier("w" + result.todayWeatherInfo.image, "drawable", packagename)));
                 }
             }
         }.execute(new QuerryLocation(location.getLongitude(), location.getLatitude()));
+    }
+
+    protected void appearWeatherInfo(LocationWeatherInfo result) {
+        final LocationWeatherInfo fresult = result;
+        final Animation animationAppear = AnimationUtils.loadAnimation(this, R.anim.appearing);
+        animationAppear.setDuration(200);
+        animationAppear.setAnimationListener(new Animation.AnimationListener() {
+            public void onAnimationStart(Animation paramAnimation) {
+                tvTemp.setText(String.valueOf((int) Math.round(fresult.todayWeatherInfo.temperature))+"°");
+            }
+            public void onAnimationRepeat(Animation paramAnimation) {}
+            public void onAnimationEnd(Animation paramAnimation) {}
+        });
+        tvTemp.startAnimation(animationAppear);
+    }
+
+    protected void updateFavButton() {
+        switch (fav_status) {
+            case FAV_STATUS.NOT_APPLICABLE:
+                return;
+            case FAV_STATUS.FAVORITED:
+                if (favIcon!=null)
+                    favIcon.setImageResource(R.drawable.ic_action_action_fav);
+                break;
+            case FAV_STATUS.NOT_FAVORITED:
+                if (favIcon!=null)
+                    favIcon.setImageResource(R.drawable.ic_action_action_not_fav);
+                break;
+        }
+    }
+
+    public void onFav(View v) {
+        switch (fav_status) {
+            case FAV_STATUS.NOT_APPLICABLE:
+                return;
+            case FAV_STATUS.FAVORITED:
+                fav_status = FAV_STATUS.NOT_FAVORITED;
+                break;
+            case FAV_STATUS.NOT_FAVORITED:
+                fav_status = FAV_STATUS.FAVORITED;
+                break;
+        }
+        updateFavButton();
     }
 }

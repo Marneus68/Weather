@@ -28,7 +28,6 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textSize="125dp"
-        android:text="10°"
         android:layout_below="@+id/detailsGPS"
         android:layout_centerHorizontal="true" />
 
@@ -70,8 +69,31 @@
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="@string/forecast"
                 android:id="@+id/textView" />
+
         </LinearLayout>
 
     </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="50dp"
+        android:layout_height="40dp"
+        android:paddingRight="10dp"
+        android:gravity="start"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/favIcon"
+            android:layout_gravity="center"
+            android:onClick="onFav"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+
+    </LinearLayout>
+
 
 </RelativeLayout>
