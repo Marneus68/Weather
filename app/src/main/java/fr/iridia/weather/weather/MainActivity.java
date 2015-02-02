@@ -68,8 +68,8 @@ public class MainActivity extends ActionBarActivity {
                 .setCancelable(false)
                 .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(final DialogInterface dialog, final int id) {
-                        //startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-                        openWeatherDetailsActivity();
+                        startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                        //openWeatherDetailsActivity();
                     }
                 })
                 .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {

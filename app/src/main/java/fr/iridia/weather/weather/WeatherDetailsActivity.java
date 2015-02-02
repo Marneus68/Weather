@@ -6,6 +6,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -93,8 +94,8 @@ public class WeatherDetailsActivity extends ActionBarActivity {
                     @Override
                     protected void onPostExecute(LocationWeatherInfo result) {
                         if (result!=null) {
-                            tvTemp.setText(String.valueOf((int) Math.round(result.todayWeatherInfo.temperature))+"°");
-                            ivWeather.setImageDrawable(getResources().getDrawable(getResources().getIdentifier("w" + result.todayWeatherInfo.image, "drawable", packagename)));
+                            appearWeatherInfo(result);
+                            tvGPS.setText(tvGPS.getText());
                         }
                     }
                 }.execute(new QuerryLocation(tmpLongitude, tmpLatitude));
@@ -110,16 +111,16 @@ public class WeatherDetailsActivity extends ActionBarActivity {
         new OpenWeatherMapGPSAsyncTask() {
             @Override
             protected void onPostExecute(LocationWeatherInfo result) {
-                final LocationWeatherInfo fresult = result;
-                if (fresult!=null) {
+                if (result!=null) {
                     wda.appearWeatherInfo(result);
-                    ivWeather.setImageDrawable(getResources().getDrawable(wda.getResources().getIdentifier("w" + result.todayWeatherInfo.image, "drawable", packagename)));
+                    tvGPS.setText(tvGPS.getText());
                 }
             }
         }.execute(new QuerryLocation(location.getLongitude(), location.getLatitude()));
     }
 
     protected void appearWeatherInfo(LocationWeatherInfo result) {
+        final WeatherDetailsActivity wda = this;
         final LocationWeatherInfo fresult = result;
         final Animation animationAppear = AnimationUtils.loadAnimation(this, R.anim.appearing);
         animationAppear.setDuration(200);
@@ -128,7 +129,22 @@ public class WeatherDetailsActivity extends ActionBarActivity {
                 tvTemp.setText(String.valueOf((int) Math.round(fresult.todayWeatherInfo.temperature))+"°");
             }
             public void onAnimationRepeat(Animation paramAnimation) {}
-            public void onAnimationEnd(Animation paramAnimation) {}
+            public void onAnimationEnd(Animation paramAnimation) {
+                Log.i(TAG, "Temperature appeared.");
+
+                Animation animationDrawableAppear = AnimationUtils.loadAnimation(wda, R.anim.appearing);
+                animationDrawableAppear.setDuration(200);
+                animationDrawableAppear.setAnimationListener(new Animation.AnimationListener() {
+                    public void onAnimationStart(Animation animation) {
+                        ivWeather.setImageDrawable(getResources().getDrawable(wda.getResources().getIdentifier("w" + fresult.todayWeatherInfo.image, "drawable", packagename)));
+                    }
+                    public void onAnimationEnd(Animation animation) {}
+                    public void onAnimationRepeat(Animation animation) {
+                        Log.i(TAG, "Drawable displayed.");
+                    }
+                });
+                ivWeather.startAnimation(animationDrawableAppear);
+            }
         });
         tvTemp.startAnimation(animationAppear);
     }
