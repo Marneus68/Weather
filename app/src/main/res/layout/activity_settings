@@ -31,4 +31,11 @@
             android:layout_toEndOf="@+id/iconView" />
     </RelativeLayout>
 
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/clear_settings"
+        android:id="@+id/clearSettingsButton"
+        android:onClick="clearSettings"/>
+
 </LinearLayout>

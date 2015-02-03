@@ -1,6 +1,8 @@
 package fr.iridia.weather.weather;
 
+import android.app.Activity;
 import android.os.AsyncTask;
+import android.view.View;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -21,6 +23,17 @@ import fr.iridia.weather.weather.data.WeatherInfo;
 public class OpenWeatherMapGPSAsyncTask extends AsyncTask<QuerryLocation, Integer, LocationWeatherInfo> {
 
     public static final String TAG = "OpenWeatherMapGPSAsyncTask";
+
+    protected View baseView;
+
+    public OpenWeatherMapGPSAsyncTask() {
+        super();
+    }
+
+    public OpenWeatherMapGPSAsyncTask(View baseView) {
+        super();
+        this.baseView = baseView;
+    }
 
     protected LocationWeatherInfo doInBackground(QuerryLocation... loc) {
 

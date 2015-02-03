@@ -13,6 +13,13 @@
     <string name="settings">Settings</string>
     <string name="search">Search</string>
     <string name="forecast">Forecast:</string>
+    <string name="clear_settings">Clear app preferences</string>
+
+    <string-array name="default_cities">
+        <item>Paris|48.853409|2.3488</item>
+        <item>City of London|51.512791|-0.09184</item>
+        <item>New York City|40.714272|-74.005966</item>
+    </string-array>
 
     <!-- 2characters country codes -->
     <string-array name="country_codes_array">

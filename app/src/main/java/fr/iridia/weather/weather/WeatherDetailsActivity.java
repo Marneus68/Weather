@@ -1,6 +1,7 @@
 package fr.iridia.weather.weather;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -12,6 +13,8 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import java.util.HashSet;
 
 import fr.iridia.weather.weather.data.LocationWeatherInfo;
 import fr.iridia.weather.weather.data.QuerryLocation;
@@ -47,6 +50,13 @@ public class WeatherDetailsActivity extends ActionBarActivity {
     protected ImageView favIcon;
 
     protected String packagename = null;
+
+    SharedPreferences sharedPreferences;
+    HashSet<String> hs;
+
+    String name;
+    double lat;
+    double lon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,10 +95,16 @@ public class WeatherDetailsActivity extends ActionBarActivity {
                 tvGPS.setText("");
                 break;
             case DETAIL_ACTIVITY_TYPES.NAMED_GPS_COORDINATES:
-                tvName.setText(getIntent().getStringExtra(DETAIL_ACTIVITY_EXTRA_KEY));
-                double tmpLongitude = getIntent().getDoubleExtra(DETAIL_ACTIVITY_EXTRA_LONGITUDE, 0);
-                double tmpLatitude = getIntent().getDoubleExtra(DETAIL_ACTIVITY_EXTRA_LATITUDE, 0);
-                tvGPS.setText(tmpLatitude + " : " + tmpLongitude);
+
+                sharedPreferences = getSharedPreferences(MainActivity.PreferencesString, Context.MODE_PRIVATE);
+                hs = (HashSet<String>) sharedPreferences.getStringSet(MainActivity.PrefFavCitiesKey, null);
+
+                name = getIntent().getStringExtra(DETAIL_ACTIVITY_EXTRA_KEY);
+                lat  = getIntent().getDoubleExtra(DETAIL_ACTIVITY_EXTRA_LATITUDE, 0);
+                lon  = getIntent().getDoubleExtra(DETAIL_ACTIVITY_EXTRA_LONGITUDE, 0);
+
+                tvName.setText(name);
+                tvGPS.setText(lat + " : " + lon);
 
                 new OpenWeatherMapGPSAsyncTask() {
                     @Override
@@ -98,8 +114,13 @@ public class WeatherDetailsActivity extends ActionBarActivity {
                             tvGPS.setText(tvGPS.getText());
                         }
                     }
-                }.execute(new QuerryLocation(tmpLongitude, tmpLatitude));
-                fav_status = FAV_STATUS.NOT_FAVORITED;
+                }.execute(new QuerryLocation(lon, lat));
+
+                if (hs.contains(name+"|"+lat+"|"+lon))
+                    fav_status = FAV_STATUS.FAVORITED;
+                else
+                    fav_status = FAV_STATUS.NOT_FAVORITED;
+
                 break;
         }
         updateFavButton();
@@ -165,16 +186,24 @@ public class WeatherDetailsActivity extends ActionBarActivity {
     }
 
     public void onFav(View v) {
-        switch (fav_status) {
-            case FAV_STATUS.NOT_APPLICABLE:
-                return;
-            case FAV_STATUS.FAVORITED:
-                fav_status = FAV_STATUS.NOT_FAVORITED;
-                break;
-            case FAV_STATUS.NOT_FAVORITED:
-                fav_status = FAV_STATUS.FAVORITED;
-                break;
+        if (null!=sharedPreferences) {
+            SharedPreferences.Editor ed = sharedPreferences.edit();
+
+            switch (fav_status) {
+                case FAV_STATUS.NOT_APPLICABLE:
+                    return;
+                case FAV_STATUS.FAVORITED:
+                    fav_status = FAV_STATUS.NOT_FAVORITED;
+                    hs.remove(name+"|"+lat+"|"+lon);
+                    break;
+                case FAV_STATUS.NOT_FAVORITED:
+                    hs.add(name+"|"+lat+"|"+lon);
+                    fav_status = FAV_STATUS.FAVORITED;
+                    break;
+            }
+            ed.putStringSet(MainActivity.PrefFavCitiesKey, hs);
+            ed.commit();
+            updateFavButton();
         }
-        updateFavButton();
     }
 }
