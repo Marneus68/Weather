@@ -22,6 +22,15 @@
         android:layout_below="@+id/detailsTitle"
         android:layout_centerHorizontal="true" />
 
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_below="@+id/linearLayout2"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/linearLayout3"></LinearLayout>
+
     <TextView
         android:id="@+id/detailsTemperature"
         android:layout_width="wrap_content"
@@ -29,49 +38,22 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textSize="125dp"
         android:layout_below="@+id/detailsGPS"
-        android:layout_centerHorizontal="true" />
-
-    <RelativeLayout
-        android:orientation="vertical"
-        android:background="@color/primary_material_dark"
-        android:layout_width="fill_parent"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/detailsTemperature"
-        android:layout_height="wrap_content">
+        android:layout_toStartOf="@+id/linearLayout3"
+        android:layout_toLeftOf="@+id/linearLayout3" />
 
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:id="@+id/detailsIcon"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_above="@+id/linearLayout" />
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="fill_parent"
-            android:layout_height="140dp"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:background="@android:color/black"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:id="@+id/linearLayout"
-            android:padding="10dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="@string/forecast"
-                android:id="@+id/textView" />
-
-        </LinearLayout>
-
-    </RelativeLayout>
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:id="@+id/detailsIcon"
+        android:layout_alignTop="@+id/detailsTemperature"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="6dp"
+        android:layout_marginEnd="6dp"
+        android:layout_alignLeft="@+id/linearLayout3"
+        android:layout_alignStart="@+id/linearLayout3" />
 
     <LinearLayout
         android:layout_width="50dp"
@@ -80,7 +62,8 @@
         android:gravity="start"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true">
+        android:layout_alignParentEnd="true"
+        android:id="@+id/linearLayout2">
 
         <ImageView
             android:layout_width="match_parent"
@@ -91,8 +74,24 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true" />
-
     </LinearLayout>
 
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="140dp"
+        android:background="@android:color/black"
+        android:id="@+id/linearLayout"
+        android:padding="10dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="@string/forecast"
+            android:id="@+id/textView" />
+    </LinearLayout>
 </RelativeLayout>
