@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.media.Image;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,10 +15,12 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 
 import fr.iridia.weather.weather.data.LocationWeatherInfo;
 import fr.iridia.weather.weather.data.QuerryLocation;
+import fr.iridia.weather.weather.data.WeatherInfo;
 
 public class WeatherDetailsActivity extends ActionBarActivity {
 
@@ -106,7 +109,7 @@ public class WeatherDetailsActivity extends ActionBarActivity {
                 tvName.setText(name);
                 tvGPS.setText(lat + " : " + lon);
 
-                new OpenWeatherMapGPSAsyncTask() {
+                new OWMAsyncTask() {
                     @Override
                     protected void onPostExecute(LocationWeatherInfo result) {
                         if (result!=null) {
@@ -129,7 +132,7 @@ public class WeatherDetailsActivity extends ActionBarActivity {
     protected void hereDetails(Location location) {
         tvGPS.setText(location.getLatitude() + " : " + location.getLongitude());
         final WeatherDetailsActivity wda = this;
-        new OpenWeatherMapGPSAsyncTask() {
+        new OWMAsyncTask() {
             @Override
             protected void onPostExecute(LocationWeatherInfo result) {
                 if (result!=null) {
@@ -144,6 +147,7 @@ public class WeatherDetailsActivity extends ActionBarActivity {
         final WeatherDetailsActivity wda = this;
         final LocationWeatherInfo fresult = result;
         final Animation animationAppear = AnimationUtils.loadAnimation(this, R.anim.appearing);
+
         animationAppear.setDuration(200);
         animationAppear.setAnimationListener(new Animation.AnimationListener() {
             public void onAnimationStart(Animation paramAnimation) {
@@ -159,15 +163,77 @@ public class WeatherDetailsActivity extends ActionBarActivity {
                     public void onAnimationStart(Animation animation) {
                         ivWeather.setImageDrawable(getResources().getDrawable(wda.getResources().getIdentifier("w" + fresult.todayWeatherInfo.image, "drawable", packagename)));
                     }
-                    public void onAnimationEnd(Animation animation) {}
-                    public void onAnimationRepeat(Animation animation) {
+                    public void onAnimationEnd(Animation animation) {
                         Log.i(TAG, "Drawable displayed.");
+
+                        new OWMForecastAsyncTask(){
+                            @Override
+                            protected void onPostExecute(LocationWeatherInfo result) {
+                                super.onPostExecute(result);
+                                appearForecast(result);
+                            }
+                        }.execute(new QuerryLocation(lon, lat));
                     }
+                    public void onAnimationRepeat(Animation animation) {}
                 });
                 ivWeather.startAnimation(animationDrawableAppear);
             }
         });
         tvTemp.startAnimation(animationAppear);
+    }
+
+    protected void appearForecast(LocationWeatherInfo res) {
+        final WeatherDetailsActivity wda = this;
+        final LocationWeatherInfo result = res;
+
+        final ImageView im0 = (ImageView) findViewById(R.id.forecast_0);
+        final ImageView im1 = (ImageView) findViewById(R.id.forecast_1);
+        final ImageView im2 = (ImageView) findViewById(R.id.forecast_2);
+
+        final Animation animationAppear0 = AnimationUtils.loadAnimation(wda, R.anim.appearing);
+        animationAppear0.setDuration(200);
+        animationAppear0.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                im0.setImageDrawable(wda.getResources().getDrawable(getResources().getIdentifier(result.Forecast.get(0).image, "drawable", packagename)));
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                final Animation animationAppear1 = AnimationUtils.loadAnimation(wda, R.anim.appearing);
+                animationAppear1.setDuration(200);
+                animationAppear1.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+                        im1.setImageDrawable(wda.getResources().getDrawable(getResources().getIdentifier(result.Forecast.get(1).image, "drawable", packagename)));
+                    }
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        final Animation animationAppear2 = AnimationUtils.loadAnimation(wda, R.anim.appearing);
+                        animationAppear2.setDuration(200);
+                        animationAppear2.setAnimationListener(new Animation.AnimationListener() {
+                            @Override
+                            public void onAnimationStart(Animation animation) {
+                                im2.setImageDrawable(wda.getResources().getDrawable(getResources().getIdentifier(result.Forecast.get(2).image, "drawable", packagename)));
+                            }
+                            @Override
+                            public void onAnimationEnd(Animation animation) {}
+                            @Override
+                            public void onAnimationRepeat(Animation animation) {}
+                        });
+                        im2.startAnimation(animationAppear2);
+                    }
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {}
+                });
+                im1.startAnimation(animationAppear1);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
+        });
+        im0.startAnimation(animationAppear0);
     }
 
     protected void updateFavButton() {

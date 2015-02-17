@@ -50,7 +50,7 @@
             android:layout_above="@+id/linearLayout" />
 
         <LinearLayout
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:layout_width="fill_parent"
             android:layout_height="140dp"
             android:layout_alignParentBottom="true"
@@ -68,6 +68,35 @@
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="@string/forecast"
                 android:id="@+id/textView" />
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/forecast_0"
+                    android:src="@drawable/empty"
+                    android:layout_weight="0.3"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/forecast_1"
+                    android:src="@drawable/empty"
+                    android:layout_weight="0.3"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/forecast_2"
+                    android:src="@drawable/empty"
+                    android:layout_weight="0.3"/>
+
+            </LinearLayout>
 
         </LinearLayout>
 

@@ -2,6 +2,7 @@ package fr.iridia.weather.weather;
 
 import android.app.Activity;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.view.View;
 
 import org.apache.http.HttpEntity;
@@ -20,20 +21,9 @@ import fr.iridia.weather.weather.data.LocationWeatherInfo;
 import fr.iridia.weather.weather.data.QuerryLocation;
 import fr.iridia.weather.weather.data.WeatherInfo;
 
-public class OpenWeatherMapGPSAsyncTask extends AsyncTask<QuerryLocation, Integer, LocationWeatherInfo> {
+public class OWMAsyncTask extends AsyncTask<QuerryLocation, Integer, LocationWeatherInfo> {
 
     public static final String TAG = "OpenWeatherMapGPSAsyncTask";
-
-    protected View baseView;
-
-    public OpenWeatherMapGPSAsyncTask() {
-        super();
-    }
-
-    public OpenWeatherMapGPSAsyncTask(View baseView) {
-        super();
-        this.baseView = baseView;
-    }
 
     protected LocationWeatherInfo doInBackground(QuerryLocation... loc) {
 
@@ -75,9 +65,10 @@ public class OpenWeatherMapGPSAsyncTask extends AsyncTask<QuerryLocation, Intege
                 lwi.name = jObject.getString("name");
                 lwi.longitude = loc[0].longitude;
                 lwi.latitude = loc[0].latitude;
-                JSONArray jweather = jObject.getJSONArray("weather");
+                    JSONArray jweather = jObject.getJSONArray("weather");
                 lwi.todayWeatherInfo = new WeatherInfo(jObject.getJSONObject("main").getDouble("temp")-273.15, jweather.getJSONObject(0).getString("icon"));
             } catch (Exception e) {
+                Log.e(TAG, e.getMessage());
                 return null;
             }
         } else {
