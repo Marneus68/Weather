@@ -1,4 +1,4 @@
-package fr.iridia.weather.weather;
+package fr.iridia.weather.weather.service;
 
 import android.app.Activity;
 import android.os.AsyncTask;

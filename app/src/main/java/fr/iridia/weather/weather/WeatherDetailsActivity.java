@@ -1,12 +1,11 @@
 package fr.iridia.weather.weather;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.media.Image;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -15,14 +14,15 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Set;
 
 import fr.iridia.weather.weather.data.LocationWeatherInfo;
 import fr.iridia.weather.weather.data.QuerryLocation;
-import fr.iridia.weather.weather.data.WeatherInfo;
+import fr.iridia.weather.weather.service.OWMAsyncTask;
+import fr.iridia.weather.weather.service.OWMForecastAsyncTask;
 
-public class WeatherDetailsActivity extends ActionBarActivity {
+public class WeatherDetailsActivity extends Activity {
 
     public static final String TAG = "ActionBarActivity";
 
@@ -75,7 +75,6 @@ public class WeatherDetailsActivity extends ActionBarActivity {
         favIcon = (ImageView) findViewById(R.id.favIcon);
 
         tvGPS.setText(R.string.unset);
-        //tvTemp.setText(R.string.unset);
 
         switch (getIntent().getStringExtra(DETAIL_ACTIVITY_KEY)) {
             case DETAIL_ACTIVITY_TYPES.HERE:
@@ -99,7 +98,7 @@ public class WeatherDetailsActivity extends ActionBarActivity {
                 break;
             case DETAIL_ACTIVITY_TYPES.NAMED_GPS_COORDINATES:
 
-                sharedPreferences = getSharedPreferences(MainActivity.PreferencesString, Context.MODE_PRIVATE);
+                sharedPreferences = getApplication().getSharedPreferences(MainActivity.PreferencesString, Context.MODE_PRIVATE);
                 hs = (HashSet<String>) sharedPreferences.getStringSet(MainActivity.PrefFavCitiesKey, null);
 
                 name = getIntent().getStringExtra(DETAIL_ACTIVITY_EXTRA_KEY);
@@ -255,20 +254,22 @@ public class WeatherDetailsActivity extends ActionBarActivity {
         if (null!=sharedPreferences) {
             SharedPreferences.Editor ed = sharedPreferences.edit();
 
+            Set<String> s = new HashSet<>(hs);
+
             switch (fav_status) {
                 case FAV_STATUS.NOT_APPLICABLE:
                     return;
                 case FAV_STATUS.FAVORITED:
                     fav_status = FAV_STATUS.NOT_FAVORITED;
-                    hs.remove(name+"|"+lat+"|"+lon);
+                    s.remove(name+"|"+lat+"|"+lon);
                     break;
                 case FAV_STATUS.NOT_FAVORITED:
-                    hs.add(name+"|"+lat+"|"+lon);
+                    s.add(name+"|"+lat+"|"+lon);
                     fav_status = FAV_STATUS.FAVORITED;
                     break;
             }
-            ed.putStringSet(MainActivity.PrefFavCitiesKey, hs);
-            ed.commit();
+            ed.putStringSet(MainActivity.PrefFavCitiesKey, s);
+            ed.apply();
             updateFavButton();
         }
     }

@@ -65,7 +65,7 @@ public class MainActivity extends Activity {
     }
 
     protected void refreshFavList() {
-        SharedPreferences sharedPreferences = getSharedPreferences(PreferencesString, Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getApplication().getSharedPreferences(PreferencesString, Context.MODE_PRIVATE);
 
         if (null == favCities)
             favCities = new ArrayList<>();
@@ -74,32 +74,25 @@ public class MainActivity extends Activity {
 
         if (!sharedPreferences.contains(PrefFirstLaunchKey)) {
 
+            Log.i(TAG, "First Launch");
+
             String[] defaultCities = getResources().getStringArray(R.array.default_cities);
             SharedPreferences.Editor ed = sharedPreferences.edit();
             HashSet<String> hs = new HashSet<String>();
             for(String s : defaultCities) {
                 hs.add(s);
             }
+            ed.clear();
             ed.putStringSet(PrefFavCitiesKey, hs);
             ed.putBoolean(PrefFirstLaunchKey, true);
-            ed.apply();
+            ed.commit();
 
             favCities = ArrayToArrayList(defaultCities);
         } else {
+            Log.i(TAG, "Not first Launch");
             HashSet<String> hs = (HashSet<String>) sharedPreferences.getStringSet(PrefFavCitiesKey, null);
-            if (hs == null) {
-                String[] defaultCities = getResources().getStringArray(R.array.default_cities);
-                SharedPreferences.Editor ed = sharedPreferences.edit();
-                hs = new HashSet<String>();
-                for(String s : defaultCities) {
-                    hs.add(s);
-                }
-                ed.putStringSet(PrefFavCitiesKey, hs);
-                ed.putBoolean(PrefFirstLaunchKey, true);
-                ed.apply();
-
-                favCities = ArrayToArrayList(defaultCities);
-            } else {
+            Log.i(TAG, hs.toString());
+            if (null != hs) {
                 favCities = SetToArrayList(hs);
             }
         }
@@ -110,10 +103,6 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         final Context context = getApplicationContext();
-
-        refreshFavList();
-
-        Log.i(TAG, favCities.toString());
 
         favListView = (ListView) findViewById(R.id.favListView);
         favListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
